@@ -1,8 +1,8 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   HttpCode,
+  HttpException,
   Post,
 } from '@nestjs/common';
 import { SignInAccountUseCase } from 'src/application/use-cases/accounts/sign-in-account';
@@ -35,7 +35,14 @@ export class SignInAccountController {
       },
     });
 
-    if (result.isLeft()) throw new BadRequestException(result.value.message);
+    if (result.isLeft())
+      throw new HttpException(
+        {
+          code: result.value.code,
+          message: result.value.message,
+        },
+        400,
+      );
 
     return { accessToken: result.value.accessToken };
   }

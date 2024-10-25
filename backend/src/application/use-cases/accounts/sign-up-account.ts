@@ -5,6 +5,7 @@ import { Account } from '../../../domain/entities/account';
 import { AccountsRepository } from '../../repositories/accounts-repository';
 import { UseCase } from '../use-case';
 import { EmailBeingUsedError } from './errors/email-being-used-error';
+import { UseCaseError } from 'src/core/errors/use-case-error';
 
 export interface Input {
   account: {
@@ -14,7 +15,7 @@ export interface Input {
   };
 }
 
-export type Output = Either<Error, { accessToken: string }>;
+export type Output = Either<UseCaseError, { accessToken: string }>;
 
 @Injectable()
 export class SignUpAccountUseCase implements UseCase {

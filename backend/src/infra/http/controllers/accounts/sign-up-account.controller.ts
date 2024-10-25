@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpException, Post } from '@nestjs/common';
 import { SignUpAccountUseCase } from 'src/application/use-cases/accounts/sign-up-account';
 import { z } from 'zod';
 import { ZodValidationPipe } from '../../pipes/zod-validation.pipe';
@@ -30,7 +30,14 @@ export class SignUpAccountController {
       },
     });
 
-    if (result.isLeft()) throw new BadRequestException(result.value.message);
+    if (result.isLeft())
+      throw new HttpException(
+        {
+          code: result.value.code,
+          message: result.value.message,
+        },
+        400,
+      );
 
     return { accessToken: result.value.accessToken };
   }

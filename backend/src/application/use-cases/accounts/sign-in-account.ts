@@ -3,6 +3,7 @@ import { Encrypter } from 'src/application/cryptography/encrypter';
 import { Either, left, right } from 'src/core/either';
 import { InvalidCredentialsError } from 'src/core/errors/errors/invalid-credentials-error';
 import { ResourceNotFoundError } from 'src/core/errors/errors/resource-not-found-error';
+import { UseCaseError } from 'src/core/errors/use-case-error';
 import { AccountsRepository } from '../../repositories/accounts-repository';
 import { UseCase } from '../use-case';
 
@@ -13,7 +14,7 @@ export interface Input {
   };
 }
 
-export type Output = Either<Error, { accessToken: string }>;
+export type Output = Either<UseCaseError, { accessToken: string }>;
 
 @Injectable()
 export class SignInAccountUseCase implements UseCase {
