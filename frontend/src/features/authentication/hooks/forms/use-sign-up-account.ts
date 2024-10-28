@@ -10,6 +10,7 @@ import {
 import { AxiosError } from "axios";
 import { handleAxiosRequestError } from "@/lib/react-hook-forms/handle-request-error";
 import { accountFormErrors } from "../../helpers/form-errors";
+import { setAuthenticationSession } from "@/app/authentication/actions";
 
 export function useSignUpAccount() {
   const signUpAccountForm = useForm<SignUpAccountFormInput>({
@@ -36,9 +37,11 @@ export function useSignUpAccount() {
           },
         );
 
+        await setAuthenticationSession(response.data.accessToken);
+
         toast({
           title: "Sign up",
-          description: JSON.stringify(response.data, null, "\t"),
+          description: "You have successfully signed up.",
         });
       } catch (e) {
         if (e instanceof AxiosError)

@@ -11,6 +11,7 @@ import {
   signInAccountFormSchema,
 } from "../../validators/sign-in-account-form-schema";
 import { handleAxiosRequestError } from "@/lib/react-hook-forms/handle-request-error";
+import { setAuthenticationSession } from "@/app/authentication/actions";
 
 export function useSignInAccount() {
   const signInAccountForm = useForm<SignInAccountFormInput>({
@@ -31,9 +32,11 @@ export function useSignInAccount() {
           },
         });
 
+        await setAuthenticationSession(response.data.accessToken);
+
         toast({
           title: "Sign in",
-          description: JSON.stringify(response.data, null, "\t"),
+          description: "You have successfully signed in.",
         });
       } catch (e) {
         if (e instanceof AxiosError)

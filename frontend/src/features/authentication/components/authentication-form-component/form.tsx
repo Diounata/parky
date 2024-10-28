@@ -5,6 +5,7 @@ import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/inputs/input";
 
 import type { AuthenticationFormComponentProps } from ".";
+import { SubmitButton } from "@/components/ui/inputs/submit-button";
 
 export function AuthenticationForm({
   type,
@@ -39,9 +40,12 @@ export function AuthenticationForm({
         </main>
 
         <footer className="flex w-full flex-col items-center gap-1.5">
-          <Button className="w-full">
+          <SubmitButton
+            submittingMessage={`Signing ${type === "sign-in" ? "in" : "up"}`}
+            className="w-full"
+          >
             Sign {type === "sign-in" ? "in" : "up"}
-          </Button>
+          </SubmitButton>
 
           <p className="text-sm">
             or sign {type === "sign-in" ? "up" : "in"}{" "}
