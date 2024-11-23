@@ -1,16 +1,10 @@
-"use client";
+import { SignUpForm } from "@/features/authentication/components/authentication-form-pages/sign-up-form";
+import { Metadata } from "next";
 
-import { AuthenticationFormComponent } from "@/features/authentication/components/authentication-form-component";
-import { useSignUpAccount } from "@/features/authentication/hooks/forms/use-sign-up-account";
+export const metadata: Metadata = {
+  title: "Sign up",
+};
 
-export default function SignUpPage() {
-  const { signUpAccountForm, onSubmit } = useSignUpAccount();
-
-  return (
-    <AuthenticationFormComponent
-      type="sign-up"
-      form={signUpAccountForm}
-      onSubmit={onSubmit}
-    />
-  );
+export default function SignUpAccountPage() {
+  return <SignUpForm />;
 }

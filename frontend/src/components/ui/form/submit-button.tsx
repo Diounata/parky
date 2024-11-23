@@ -1,15 +1,15 @@
 import { Loader2 } from "lucide-react";
-import { Button } from "../button";
-import { useFormContext } from "react-hook-form";
 import { PropsWithChildren } from "react";
+import { useFormContext } from "react-hook-form";
+import { Button } from "../button";
 
 interface Props extends PropsWithChildren {
-  submittingMessage: string;
+  onSubmitChildren: string;
   className?: string;
 }
 
 export function SubmitButton({
-  submittingMessage,
+  onSubmitChildren,
   children,
   className = "",
 }: Props) {
@@ -21,7 +21,7 @@ export function SubmitButton({
       {isSubmitting ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          {submittingMessage}
+          {onSubmitChildren}
         </>
       ) : (
         children

@@ -76,7 +76,3 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
-:root {
-  --primary: #f2aeae;
-}

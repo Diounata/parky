@@ -1,9 +1,13 @@
+import { datetime } from "./fields/datetime";
 import { email } from "./fields/email";
-import { genericString } from "./fields/generic-string";
+import { number } from "./fields/number";
 import { password } from "./fields/password";
+import { string } from "./fields/string";
 
 export const formSchema = {
-  genericString,
+  string,
+  number,
   email,
   password,
+  datetime,
 };

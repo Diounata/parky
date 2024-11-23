@@ -1,7 +1,7 @@
 import { toast } from "@/hooks/use-toast";
 import { AxiosError } from "axios";
-import { registerFormError } from "./register-form-error";
 import { UseFormReturn } from "react-hook-form";
+import { registerFormError } from "./register-form-error";
 
 export interface FormErrorProps {
   name: string;
@@ -17,8 +17,9 @@ interface Props {
 export function handleAxiosRequestError({ e, form, formErrors }: Props) {
   if (!(e.response?.data.code in formErrors)) {
     return toast({
-      title: "Error",
-      description: "An unexpected error occurred.",
+      title: "HTTP error",
+      description:
+        "An unexpected error occurred. Please try again later or contact support.",
     });
   }
 

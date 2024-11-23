@@ -1,19 +1,19 @@
+import { setJwtTokenCookie } from "@/app/authentication/actions";
 import { toast } from "@/hooks/use-toast";
-import { axiosClient } from "@/lib/axios";
-import { registerFormError } from "@/lib/react-hook-forms/register-form-error";
+import { handleAxiosRequestError } from "@/lib/react-hook-forms/handle-request-error";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
 import { useCallback } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { accountFormErrors } from "../../helpers/form-errors";
+import { authenticationFormErrors } from "../../helpers/form-errors";
 import {
   SignInAccountFormInput,
   signInAccountFormSchema,
 } from "../../validators/sign-in-account-form-schema";
-import { handleAxiosRequestError } from "@/lib/react-hook-forms/handle-request-error";
-import { setAuthenticationSession } from "@/app/authentication/actions";
+import { useSignInMutation } from "../react-query/use-sign-in-mutation";
 
 export function useSignInAccount() {
+  const signInMutation = useSignInMutation();
   const signInAccountForm = useForm<SignInAccountFormInput>({
     resolver: zodResolver(signInAccountFormSchema),
     defaultValues: {
@@ -23,31 +23,28 @@ export function useSignInAccount() {
   });
 
   const onSubmit: SubmitHandler<SignInAccountFormInput> = useCallback(
-    async ({ email, password: rawPassword }) => {
+    async ({ email, password }) => {
       try {
-        const response = await axiosClient.post("/accounts/sign-in", {
-          account: {
-            email,
-            rawPassword,
-          },
+        const data = await signInMutation.mutateAsync({
+          account: { email, rawPassword: password },
         });
 
-        await setAuthenticationSession(response.data.accessToken);
-
-        toast({
-          title: "Sign in",
-          description: "You have successfully signed in.",
+        setJwtTokenCookie(data.accessToken).then(() => {
+          toast({
+            title: "Sign in",
+            description: "You have successfully signed in",
+          });
         });
       } catch (e) {
         if (e instanceof AxiosError)
           handleAxiosRequestError({
             e,
             form: signInAccountForm,
-            formErrors: accountFormErrors,
+            formErrors: authenticationFormErrors,
           });
       }
     },
-    [signInAccountForm],
+    [signInAccountForm, signInMutation],
   );
 
   return {

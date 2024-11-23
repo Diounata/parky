@@ -1,18 +1,19 @@
+import { setJwtTokenCookie } from "@/app/authentication/actions";
 import { toast } from "@/hooks/use-toast";
-import { axiosClient } from "@/lib/axios";
+import { handleAxiosRequestError } from "@/lib/react-hook-forms/handle-request-error";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import { useCallback } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { authenticationFormErrors } from "../../helpers/form-errors";
 import {
   SignUpAccountFormInput,
   signUpAccountFormSchema,
 } from "../../validators/sign-up-account-form-schema";
-import { AxiosError } from "axios";
-import { handleAxiosRequestError } from "@/lib/react-hook-forms/handle-request-error";
-import { accountFormErrors } from "../../helpers/form-errors";
-import { setAuthenticationSession } from "@/app/authentication/actions";
+import { useSignUpMutation } from "../react-query/use-sign-up-mutation";
 
 export function useSignUpAccount() {
+  const signUpMutation = useSignUpMutation();
   const signUpAccountForm = useForm<SignUpAccountFormInput>({
     resolver: zodResolver(signUpAccountFormSchema),
     defaultValues: {
@@ -24,35 +25,28 @@ export function useSignUpAccount() {
   });
 
   const onSubmit: SubmitHandler<SignUpAccountFormInput> = useCallback(
-    async ({ name, email, password: rawPassword }) => {
+    async ({ name, email, password }) => {
       try {
-        const response = await axiosClient.post(
-          "http://localhost:4000/accounts/sign-up",
-          {
-            account: {
-              name,
-              email,
-              rawPassword,
-            },
-          },
-        );
+        const data = await signUpMutation.mutateAsync({
+          account: { name, email, rawPassword: password },
+        });
 
-        await setAuthenticationSession(response.data.accessToken);
-
-        toast({
-          title: "Sign up",
-          description: "You have successfully signed up.",
+        setJwtTokenCookie(data.accessToken).then(() => {
+          toast({
+            title: "Sign in",
+            description: "You have successfully signed in",
+          });
         });
       } catch (e) {
         if (e instanceof AxiosError)
           handleAxiosRequestError({
             e,
             form: signUpAccountForm,
-            formErrors: accountFormErrors,
+            formErrors: authenticationFormErrors,
           });
       }
     },
-    [signUpAccountForm],
+    [signUpAccountForm, signUpMutation],
   );
 
   return {

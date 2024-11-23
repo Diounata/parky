@@ -4,12 +4,12 @@ interface Props {
   [key: string]: FormErrorProps;
 }
 
-export const accountFormErrors: Props = {
+export const authenticationFormErrors: Props = {
   "email-being-used": {
     name: "email",
-    message: "This email is already being used",
+    message: "This email is already being used by an account",
   },
-  "resource-not-found": {
+  "account-not-found": {
     name: "email",
     message: "Account not found",
   },
