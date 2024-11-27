@@ -8,13 +8,21 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",
+    "prisma:db:push": "prisma db push",
+    "prisma:db:migration": "prisma migrate dev",
+    "prisma:db:reset": "prisma db push --force-reset && prisma db seed",
+    "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "vitest --config ./vitest.config.mts",
-    "test:e2e:watch": "vitest --config ./vitest.config.e2e.mts"
+    "test:e2e": "vitest --config ./vitest.config.e2e.mts"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -23,7 +31,9 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
+    "@prisma/client": "^5.22.0",
     "bcrypt": "^5.1.1",
+    "prisma": "^5.22.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "uuid": "^10.0.0",

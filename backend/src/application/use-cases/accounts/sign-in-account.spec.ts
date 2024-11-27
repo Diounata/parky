@@ -1,8 +1,8 @@
 import { InvalidCredentialsError } from 'src/core/errors/errors/invalid-credentials-error';
-import { ResourceNotFoundError } from 'src/core/errors/errors/resource-not-found-error';
 import { FakeEncrypter } from 'test/cryptography/fake-encrypter';
 import { InMemoryAccountsRepository } from '../../../infra/database/in-memory-databases/in-memory-accounts-repository';
 import { AccountsRepository } from '../../repositories/accounts-repository';
+import { AccountNotFoundError } from './errors/account-not-found';
 import { Input, SignInAccountUseCase } from './sign-in-account';
 
 let accountsRepository: AccountsRepository;
@@ -57,6 +57,6 @@ describe('[UC] Sign in account', () => {
     const result = await sut.handle(input);
 
     expect(result.isLeft()).toBe(true);
-    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
+    expect(result.value).toBeInstanceOf(AccountNotFoundError);
   });
 });

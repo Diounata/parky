@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Encrypter } from 'src/application/cryptography/encrypter';
 import { Either, left, right } from 'src/core/either';
+import { UseCaseError } from 'src/core/errors/use-case-error';
 import { Account } from '../../../domain/entities/account';
 import { AccountsRepository } from '../../repositories/accounts-repository';
 import { UseCase } from '../use-case';
 import { EmailBeingUsedError } from './errors/email-being-used-error';
-import { UseCaseError } from 'src/core/errors/use-case-error';
 
 export interface Input {
   account: {
@@ -32,7 +32,12 @@ export class SignUpAccountUseCase implements UseCase {
       return left(new EmailBeingUsedError(accountByEmail.getEmail()));
     }
 
-    const account = new Account(input.account);
+    const account = new Account({
+      name: input.account.name,
+      email: input.account.email,
+      password: input.account.rawPassword,
+      passwordType: 'bcrypt',
+    });
 
     await this.accountsRepository.create(account);
 

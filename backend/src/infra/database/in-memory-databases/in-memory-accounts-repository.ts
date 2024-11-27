@@ -9,7 +9,8 @@ export class InMemoryAccountsRepository implements AccountsRepository {
       id: 'account-id',
       name: 'John Doe',
       email: 'johndoe@email.com',
-      rawPassword: '123456',
+      password: '123456',
+      passwordType: 'bcrypt',
     }),
   ];
 
