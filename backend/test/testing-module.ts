@@ -1,13 +1,14 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ModuleMetadata } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { AppModule } from 'src/infra/app.module';
 
 export class TestingModule {
   private app: INestApplication;
 
-  public async run() {
+  public async run({ imports = [], ...metadata }: ModuleMetadata = {}) {
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [...imports, AppModule],
+      ...metadata,
     }).compile();
 
     this.app = moduleRef.createNestApplication();

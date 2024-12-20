@@ -1,20 +1,18 @@
+import { DatabaseConnection } from '@/application/database/database-connection';
+import { AccountNotFoundError } from '@/application/use-cases/accounts/errors/account-not-found';
+import { Either, left, right } from '@/core/either';
+import { QueryError } from '@/core/errors/query-error';
 import { Injectable } from '@nestjs/common';
-import { DatabaseConnection } from 'src/application/database/database-connection';
-import { Either, left, right } from 'src/core/either';
-import { ResourceNotFoundError } from 'src/core/errors/errors/resource-not-found-error';
-import { QueryError } from 'src/core/errors/query-error';
 
 interface Input {
-  account: {
-    id: number;
-  };
+  accountId: string;
 }
 
 type Output = Either<
   QueryError,
   {
     account: {
-      id: number;
+      id: string;
       name: string;
       email: string;
     };
@@ -26,7 +24,7 @@ export class GetAuthenticatedAccountQuery {
   constructor(private database: DatabaseConnection) {}
 
   async handle(input: Input): Promise<Output> {
-    const account = await this.database.query(
+    const response = await this.database.query(
       `
       SELECT 
         id,
@@ -35,11 +33,13 @@ export class GetAuthenticatedAccountQuery {
       FROM accounts
       WHERE id = $1
     `,
-      [input.account.id],
+      [input.accountId],
     );
 
-    if (!account) return left(new ResourceNotFoundError());
+    if (!response) {
+      return left(new AccountNotFoundError({ id: input.accountId }));
+    }
 
-    return right(account);
+    return right({ account: response.rows[0] });
   }
 }

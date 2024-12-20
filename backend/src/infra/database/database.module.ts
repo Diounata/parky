@@ -1,14 +1,22 @@
+import { DatabaseConnection } from '@/application/database/database-connection';
+import { AccountsRepository } from '@/application/repositories/accounts-repository';
 import { Module } from '@nestjs/common';
-import { AccountsRepository } from 'src/application/repositories/accounts-repository';
-import { InMemoryAccountsRepository } from './in-memory-databases/in-memory-accounts-repository';
+import { PgDatabaseConnectionService } from './pg/pg-database-connection.service';
+import { PrismaService } from './prisma/prisma.service';
+import { PrismaAccountsRepository } from './prisma/repositories/prisma-accounts-repository';
 
 @Module({
   providers: [
+    PrismaService,
     {
       provide: AccountsRepository,
-      useClass: InMemoryAccountsRepository,
+      useClass: PrismaAccountsRepository,
+    },
+    {
+      provide: DatabaseConnection,
+      useClass: PgDatabaseConnectionService,
     },
   ],
-  exports: [AccountsRepository],
+  exports: [PrismaService, DatabaseConnection, AccountsRepository],
 })
 export class DatabaseModule {}

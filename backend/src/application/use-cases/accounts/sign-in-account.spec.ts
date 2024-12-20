@@ -1,5 +1,6 @@
 import { InvalidCredentialsError } from 'src/core/errors/errors/invalid-credentials-error';
 import { FakeEncrypter } from 'test/cryptography/fake-encrypter';
+import { makeAccount } from 'test/factories/make-account';
 import { InMemoryAccountsRepository } from '../../../infra/database/in-memory-databases/in-memory-accounts-repository';
 import { AccountsRepository } from '../../repositories/accounts-repository';
 import { AccountNotFoundError } from './errors/account-not-found';
@@ -23,6 +24,11 @@ describe('[UC] Sign in account', () => {
         rawPassword: '123456',
       },
     };
+    const account = makeAccount({
+      email: input.account.email,
+      password: input.account.rawPassword,
+    });
+    accountsRepository.create(account);
 
     const result = await sut.handle(input);
 
@@ -39,6 +45,11 @@ describe('[UC] Sign in account', () => {
         rawPassword: '654321',
       },
     };
+    const account = makeAccount({
+      email: input.account.email,
+      password: '123456',
+    });
+    accountsRepository.create(account);
 
     const result = await sut.handle(input);
 

@@ -1,4 +1,5 @@
 import { FakeEncrypter } from 'test/cryptography/fake-encrypter';
+import { makeAccount } from 'test/factories/make-account';
 import { InMemoryAccountsRepository } from '../../../infra/database/in-memory-databases/in-memory-accounts-repository';
 import { AccountsRepository } from '../../repositories/accounts-repository';
 import { EmailBeingUsedError } from './errors/email-being-used-error';
@@ -40,6 +41,11 @@ describe('[UC] Sign up account', () => {
         rawPassword: '123456',
       },
     };
+    const account = makeAccount({
+      email: input.account.email,
+      password: input.account.rawPassword,
+    });
+    accountsRepository.create(account);
 
     const result = await sut.handle(input);
 

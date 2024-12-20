@@ -1,12 +1,15 @@
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { TestingModule } from 'test/testing-module';
 
-describe('[Controller] Sign up account', () => {
+describe('[E2E] Sign up account', () => {
   let app: INestApplication;
+  let prisma: PrismaService;
 
   beforeEach(async () => {
     app = await new TestingModule().run();
+    prisma = app.get(PrismaService);
   });
 
   test('[POST] /accounts/sign-up', async () => {
@@ -24,6 +27,13 @@ describe('[Controller] Sign up account', () => {
     expect(response.body).toMatchObject({
       accessToken: expect.any(String),
     });
+    expect(
+      await prisma.account.findUnique({
+        where: {
+          email: 'user@email.com',
+        },
+      }),
+    ).toBeTruthy();
   });
 
   afterEach(async () => {

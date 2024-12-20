@@ -4,15 +4,7 @@ import { Account } from '../../../domain/entities/account';
 
 @Injectable()
 export class InMemoryAccountsRepository implements AccountsRepository {
-  accounts: Account[] = [
-    new Account({
-      id: 'account-id',
-      name: 'John Doe',
-      email: 'johndoe@email.com',
-      password: '123456',
-      passwordType: 'bcrypt',
-    }),
-  ];
+  accounts: Account[] = [];
 
   async create(account: Account): Promise<void> {
     this.accounts.push(account);
