@@ -10,7 +10,7 @@ import {
   SignUpAccountFormInput,
   signUpAccountFormSchema,
 } from "../../validators/sign-up-account-form-schema";
-import { useSignUpMutation } from "../react-query/use-sign-up-mutation";
+import { useSignUpMutation } from "../react-query/mutations/use-sign-up-mutation";
 
 export function useSignUpAccount() {
   const signUpMutation = useSignUpMutation();

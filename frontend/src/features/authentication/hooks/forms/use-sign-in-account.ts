@@ -10,7 +10,7 @@ import {
   SignInAccountFormInput,
   signInAccountFormSchema,
 } from "../../validators/sign-in-account-form-schema";
-import { useSignInMutation } from "../react-query/use-sign-in-mutation";
+import { useSignInMutation } from "../react-query/mutations/use-sign-in-mutation";
 
 export function useSignInAccount() {
   const signInMutation = useSignInMutation();

@@ -7,7 +7,7 @@ export const signUpAccountFormSchema = z
     name: formSchema.string
       .min(3, "Name must be at least 3 characters")
       .max(50, "Name must be at most 50 characters"),
-    email: formSchema.email,
+    email: formSchema.email.max(254, "Email must be at most 254 characters"),
     password: formSchema.password,
     repeatPassword: formSchema.password,
   })

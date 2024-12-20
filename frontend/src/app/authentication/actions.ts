@@ -10,6 +10,7 @@ export async function setJwtTokenCookie(accessToken: string) {
 
   cookies().set(cookieName, accessToken, {
     secure: true,
+    httpOnly: true,
     expires: expiresAt ? new Date(expiresAt * 1000) : undefined,
   });
 

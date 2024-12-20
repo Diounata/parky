@@ -16,20 +16,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useGetAuthenticatedAccountQuery } from "@/features/accounts/hooks/react-query/queries/use-get-authenticated-account-query";
+import { toast } from "@/hooks/use-toast";
 import { configuration } from "@/lib/config/configuration";
 import { ChevronsUpDown, LogOut, User } from "lucide-react";
 import Link from "next/link";
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-}) {
+export function NavUser() {
   const { isMobile } = useSidebar();
+  const { data: authenticatedAccount } = useGetAuthenticatedAccountQuery();
 
   return (
     <SidebarMenu>
@@ -40,11 +35,16 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar src={user.avatar} fallback={user.name} />
+              <Avatar src={""} fallback={authenticatedAccount?.name} />
 
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-semibold">
+                  {authenticatedAccount?.name}
+                </span>
+
+                <span className="truncate text-xs">
+                  {authenticatedAccount?.email}
+                </span>
               </div>
 
               <ChevronsUpDown className="ml-auto size-4" />
@@ -59,11 +59,16 @@ export function NavUser({
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar src={user.avatar} fallback={user.name} />
+                <Avatar src={""} fallback={authenticatedAccount?.name} />
 
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-semibold">
+                    {authenticatedAccount?.name}
+                  </span>
+
+                  <span className="truncate text-xs">
+                    {authenticatedAccount?.email}
+                  </span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -81,7 +86,15 @@ export function NavUser({
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem onClick={() => logout()}>
+            <DropdownMenuItem
+              onClick={() => {
+                logout();
+                toast({
+                  title: "Log out",
+                  description: "You have successfully logged out",
+                });
+              }}
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>
