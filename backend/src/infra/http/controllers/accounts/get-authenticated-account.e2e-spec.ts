@@ -27,7 +27,7 @@ describe('[E2E] Get authenticated account', () => {
 
     const response = await request(app.getHttpServer())
       .get('/api/queries/accounts/get-authenticated-account')
-      .set('Authorization', `Bearer ${accessToken}`);
+      .set('Cookie', `auth-jwt-token=${accessToken}`);
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toMatchObject({

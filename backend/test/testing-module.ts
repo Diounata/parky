@@ -1,5 +1,6 @@
 import { INestApplication, ModuleMetadata } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import cookieParser from 'cookie-parser';
 import { AppModule } from 'src/infra/app.module';
 
 export class TestingModule {
@@ -13,6 +14,7 @@ export class TestingModule {
 
     this.app = moduleRef.createNestApplication();
     this.app.setGlobalPrefix('api');
+    this.app.use(cookieParser());
     await this.app.init();
 
     return this.app;

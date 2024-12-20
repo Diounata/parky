@@ -12,7 +12,7 @@ export class GetAuthenticatedAccountController {
   @Get('get-authenticated-account')
   async handle(@Req() req) {
     const result = await this.getAuthenticatedAccountQuery.handle({
-      accountId: req.user.userId,
+      accountId: req.user.sub,
     });
 
     if (result.isLeft()) {
