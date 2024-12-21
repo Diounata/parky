@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,19 +16,26 @@ interface LinkProps {
 }
 
 export function DynamicBreadcrumb() {
-  const pathnames = window ? window.location.pathname.split("/") : [];
-  pathnames.shift();
+  const [links, setLinks] = useState<LinkProps[]>([]);
 
-  const links = pathnames.reduce<LinkProps[]>((array, pathname) => {
-    const previousPathname =
-      array.length > 0 ? array[array.length - 1].href : "";
+  useEffect(() => {
+    const pathnames = window ? window.location.pathname.split("/") : [];
+    pathnames.shift();
 
-    array.push({
-      name: pathname[0].toUpperCase() + pathname.slice(1).replaceAll(/-/g, " "),
-      href: previousPathname + "/" + pathname,
-    });
+    const formattedLinks = pathnames.reduce<LinkProps[]>((array, pathname) => {
+      const previousPathname =
+        array.length > 0 ? array[array.length - 1].href : "";
 
-    return array;
+      array.push({
+        name:
+          pathname[0].toUpperCase() + pathname.slice(1).replaceAll(/-/g, " "),
+        href: previousPathname + "/" + pathname,
+      });
+
+      return array;
+    }, []);
+
+    setLinks(formattedLinks);
   }, []);
 
   return (
