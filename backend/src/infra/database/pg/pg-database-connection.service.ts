@@ -1,6 +1,6 @@
 import { DatabaseConnection } from '@/application/database/database-connection';
 import { Injectable } from '@nestjs/common';
-import { Pool, PoolConfig, QueryResult } from 'pg';
+import { Pool, PoolConfig } from 'pg';
 
 @Injectable()
 export class PgDatabaseConnectionService implements DatabaseConnection {
@@ -20,10 +20,10 @@ export class PgDatabaseConnectionService implements DatabaseConnection {
     });
   }
 
-  async query<T>(statement: string, params?: any[]): Promise<QueryResult<T>> {
+  async query<T>(statement: string, params?: any[]): Promise<Array<T>> {
     const client = await this.pool.connect();
     try {
-      return await client.query<T>(statement, params);
+      return (await client.query<T>(statement, params)).rows;
     } finally {
       client.release();
     }
