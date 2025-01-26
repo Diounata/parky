@@ -5,8 +5,8 @@ CREATE TABLE "accounts" (
     "email" TEXT NOT NULL,
     "password_hash" TEXT NOT NULL,
     "password_type" TEXT NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3),
+    "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(3),
 
     CONSTRAINT "accounts_pkey" PRIMARY KEY ("id")
 );

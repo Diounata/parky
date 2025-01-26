@@ -10,6 +10,18 @@ export class InMemoryAccountsRepository implements AccountsRepository {
     this.accounts.push(account);
   }
 
+  async update(account: Account): Promise<void> {
+    const index = this.accounts.findIndex(
+      (acc) => acc.getEmail() === account.getEmail(),
+    );
+    this.accounts[index] = account;
+  }
+
+  async findAccountById(id: string): Promise<Account | null> {
+    const account = this.accounts.find((account) => account.getId() === id);
+    return account ?? null;
+  }
+
   async findAccountByEmail(email: string): Promise<Account | null> {
     const account = this.accounts.find(
       (account) => account.getEmail() === email,

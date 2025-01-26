@@ -1,6 +1,6 @@
 "use client";
 import { logout } from "@/app/authentication/actions";
-import { Avatar } from "@/app/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -76,7 +76,7 @@ export function NavUser() {
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <Link href={configuration.paths.dashboard.home}>
+              <Link href={configuration.paths.dashboard.account}>
                 <DropdownMenuItem>
                   <User />
                   Account

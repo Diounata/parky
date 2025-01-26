@@ -1,44 +1,52 @@
 import { Encrypter } from '@/application/cryptography/encrypter';
 import { DatabaseModule } from '@/infra/database/database.module';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AccountFactory } from 'test/factories/make-account';
 import { TestingModule } from 'test/testing-module';
 
-describe('[E2E] Get authenticated account', () => {
+describe('[E2E] Update authenticated account', () => {
   let app: INestApplication;
-  let jwtEncrypter: Encrypter;
+  let prisma: PrismaService;
   let accountFactory: AccountFactory;
+  let jwtEncrypter: Encrypter;
 
   beforeEach(async () => {
     app = await new TestingModule().run({
       imports: [DatabaseModule],
       providers: [AccountFactory],
     });
-    jwtEncrypter = app.get(Encrypter);
+    prisma = app.get(PrismaService);
     accountFactory = app.get(AccountFactory);
+    jwtEncrypter = app.get(Encrypter);
   });
 
-  test('[GET] /queries/accounts/get-authenticated-account', async () => {
+  test('[POST] /accounts/update-authenticated-account', async () => {
     const account = await accountFactory.makePrismaAccount();
+    const updatedAccountEmail = 'updated-email@email.com';
     const accessToken = await jwtEncrypter.encrypt({
       sub: account.getId(),
     });
 
     const response = await request(app.getHttpServer())
-      .get('/api/queries/accounts/get-authenticated-account')
-      .set('Cookie', `auth-jwt-token=${accessToken}`);
+      .put('/api/accounts/update-authenticated-account')
+      .set('Cookie', `auth-jwt-token=${accessToken}`)
+      .send({
+        account: {
+          name: account.getName(),
+          email: updatedAccountEmail,
+        },
+      });
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toMatchObject({
-      account: expect.objectContaining({
-        id: expect.any(String),
-        name: expect.any(String),
-        email: expect.any(String),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String),
+    expect(
+      await prisma.account.findUnique({
+        where: {
+          email: updatedAccountEmail,
+        },
       }),
-    });
+    ).toBeTruthy();
   });
 
   afterEach(async () => {

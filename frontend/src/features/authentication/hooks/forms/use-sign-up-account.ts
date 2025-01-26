@@ -10,10 +10,10 @@ import {
   SignUpAccountFormInput,
   signUpAccountFormSchema,
 } from "../../validators/sign-up-account-form-schema";
-import { useSignUpMutation } from "../react-query/mutations/use-sign-up-mutation";
+import { useSignUpAccountMutation } from "../react-query/mutations/use-sign-up-account-mutation";
 
 export function useSignUpAccount() {
-  const signUpMutation = useSignUpMutation();
+  const signUpMutation = useSignUpAccountMutation();
   const signUpAccountForm = useForm<SignUpAccountFormInput>({
     resolver: zodResolver(signUpAccountFormSchema),
     defaultValues: {

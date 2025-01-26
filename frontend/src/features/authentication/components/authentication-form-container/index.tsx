@@ -11,7 +11,7 @@ export interface AuthenticationFormProps {
 
 export function AuthenticationForm(props: AuthenticationFormProps) {
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center p-4">
+    <div className="flex h-screen w-full flex-col items-center justify-center bg-muted p-4 dark:bg-inherit">
       <Card className="w-full md:w-[600px]">
         <AuthenticationFormHeader {...props} />
         <AuthenticationFormComponent {...props} />

@@ -2,6 +2,7 @@ import { DatabaseConnection } from '@/application/database/database-connection';
 import { AccountNotFoundError } from '@/application/use-cases/accounts/errors/account-not-found';
 import { Either, left, right } from '@/core/either';
 import { QueryError } from '@/core/errors/query-error';
+import { PrismaService } from '@/infra/database/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 
 interface Input {
@@ -21,7 +22,10 @@ type Output = Either<
 
 @Injectable()
 export class GetAuthenticatedAccountQuery {
-  constructor(private database: DatabaseConnection) {}
+  constructor(
+    private database: DatabaseConnection,
+    private prisma: PrismaService,
+  ) {}
 
   async handle(input: Input): Promise<Output> {
     const response = await this.database.query(
@@ -29,7 +33,9 @@ export class GetAuthenticatedAccountQuery {
       SELECT 
         id,
         name,
-        email
+        email,
+        created_at AS "createdAt",
+        updated_at AS "updatedAt"
       FROM accounts
       WHERE id = $1
     `,

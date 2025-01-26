@@ -5,5 +5,6 @@ export const paths = {
   },
   dashboard: {
     home: "/dashboard",
+    account: "/dashboard/account",
   },
 };
